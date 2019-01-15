@@ -21,29 +21,25 @@ namespace Elastos {
 		PayloadCoinBase::~PayloadCoinBase() {
 		}
 
-		CMBlock PayloadCoinBase::getData() const {
-            return _coinBaseData;
-        }
-
 		void PayloadCoinBase::setCoinBaseData(const CMBlock &coinBaseData) {
 			_coinBaseData = coinBaseData;
 		}
 
-		void PayloadCoinBase::Serialize(ByteStream &ostream) const {
+		void PayloadCoinBase::Serialize(ByteStream &ostream, uint8_t version) const {
 			ostream.writeVarBytes(_coinBaseData);
 		}
 
-		bool PayloadCoinBase::Deserialize(ByteStream &istream) {
+		bool PayloadCoinBase::Deserialize(ByteStream &istream, uint8_t version) {
 			return istream.readVarBytes(_coinBaseData);
 		}
 
-		nlohmann::json PayloadCoinBase::toJson() const {
+		nlohmann::json PayloadCoinBase::toJson(uint8_t version) const {
 			nlohmann::json j;
 			j["CoinBaseData"] = Utils::encodeHex(_coinBaseData);
 			return j;
 		}
 
-		void PayloadCoinBase::fromJson(const nlohmann::json &j) {
+		void PayloadCoinBase::fromJson(const nlohmann::json &j, uint8_t version) {
 			_coinBaseData = Utils::decodeHex(j["CoinBaseData"].get<std::string>());
 
 		}

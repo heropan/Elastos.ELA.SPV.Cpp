@@ -398,7 +398,7 @@ namespace Elastos {
 			ParamChecker::checkCondition(_transaction->payload == nullptr, Error::Transaction,
 										 "payload should not be null");
 
-			_transaction->payload->Serialize(ostream);
+			_transaction->payload->Serialize(ostream, _transaction->payloadVersion);
 
 			ostream.writeVarUint(_transaction->attributes.size());
 			for (size_t i = 0; i < _transaction->attributes.size(); i++) {
@@ -442,7 +442,7 @@ namespace Elastos {
 				Log::getLogger()->error("new payload with type={} when deserialize error", _transaction->type);
 				return false;
 			}
-			if (!_transaction->payload->Deserialize(istream))
+			if (!_transaction->payload->Deserialize(istream, _transaction->payloadVersion))
 				return false;
 
 			uint64_t attributeLength = 0;
@@ -556,7 +556,7 @@ namespace Elastos {
 
 			jsonData["Type"] = (uint8_t) _transaction->type;
 			jsonData["PayloadVersion"] = _transaction->payloadVersion;
-			jsonData["PayLoad"] = _transaction->payload->toJson();
+			jsonData["PayLoad"] = _transaction->payload->toJson(_transaction->payloadVersion);
 
 			std::vector<nlohmann::json> attributes(_transaction->attributes.size());
 			for (size_t i = 0; i < attributes.size(); ++i) {
@@ -630,7 +630,7 @@ namespace Elastos {
 			if (_transaction->payload == nullptr) {
 				Log::getLogger()->error("payload is nullptr when convert from json");
 			} else {
-				_transaction->payload->fromJson(jsonData["PayLoad"]);
+				_transaction->payload->fromJson(jsonData["PayLoad"], _transaction->payloadVersion);
 			}
 
 			std::vector<nlohmann::json> attributes = jsonData["Attributes"];

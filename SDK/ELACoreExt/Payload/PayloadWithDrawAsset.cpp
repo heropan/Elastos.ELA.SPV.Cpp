@@ -50,13 +50,7 @@ namespace Elastos {
 			return _sideChainTransactionHash;
 		}
 
-		CMBlock PayloadWithDrawAsset::getData() const {
-			ByteStream stream;
-			Serialize(stream);
-			return stream.getBuffer();
-		}
-
-		void PayloadWithDrawAsset::Serialize(ByteStream &ostream) const {
+		void PayloadWithDrawAsset::Serialize(ByteStream &ostream, uint8_t version) const {
 			ostream.writeUint32(_blockHeight);
 			ostream.writeVarString(_genesisBlockAddress);
 			ostream.writeVarUint((uint64_t)_sideChainTransactionHash.size());
@@ -66,7 +60,7 @@ namespace Elastos {
 			}
 		}
 
-		bool PayloadWithDrawAsset::Deserialize(ByteStream &istream) {
+		bool PayloadWithDrawAsset::Deserialize(ByteStream &istream, uint8_t version) {
 			if (!istream.readUint32(_blockHeight)) {
 				Log::error("Payload with draw asset deserialize block height fail");
 				return false;
@@ -94,7 +88,7 @@ namespace Elastos {
 			return true;
 		}
 
-		nlohmann::json PayloadWithDrawAsset::toJson() const {
+		nlohmann::json PayloadWithDrawAsset::toJson(uint8_t version) const {
 			nlohmann::json j;
 
 			j["BlockHeight"] = _blockHeight;
@@ -109,7 +103,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadWithDrawAsset::fromJson(const nlohmann::json &j) {
+		void PayloadWithDrawAsset::fromJson(const nlohmann::json &j, uint8_t version) {
 			_blockHeight = j["BlockHeight"].get<uint32_t>();
 			_genesisBlockAddress = j["GenesisBlockAddress"].get<std::string>();
 

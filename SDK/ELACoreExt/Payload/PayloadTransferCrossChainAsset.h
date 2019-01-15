@@ -27,8 +27,6 @@ namespace Elastos {
 			                   const std::vector<uint64_t> outputIndex,
 			                   const std::vector<uint64_t> crossChainAmount);
 
-			virtual CMBlock getData() const;
-
 			const std::vector<std::string> &getCrossChainAddress() const;
 
 			const std::vector<uint64_t> &getOutputIndex() const;
@@ -36,13 +34,13 @@ namespace Elastos {
 			const std::vector<uint64_t> &getCrossChainAmout() const;
 
 
-			virtual void Serialize(ByteStream &ostream) const;
+			virtual void Serialize(ByteStream &ostream, uint8_t version) const;
 
-			virtual bool Deserialize(ByteStream &istream);
+			virtual bool Deserialize(ByteStream &istream, uint8_t version);
 
-			virtual nlohmann::json toJson() const;
+			virtual nlohmann::json toJson(uint8_t version) const;
 
-			virtual void fromJson(const nlohmann::json &jsonData);
+			virtual void fromJson(const nlohmann::json &jsonData, uint8_t version);
 
 			virtual bool isValid() const;
 

@@ -13,25 +13,30 @@ namespace Elastos {
 		class PayloadIssueToken :
 				public IPayload {
 		public:
+			enum Version {
+				V0,
+				V1,
+			};
+
+		public:
 			PayloadIssueToken();
 
 			PayloadIssueToken(const CMBlock &merkeProff, const CMBlock &mainChainTransaction);
 
 			~PayloadIssueToken();
 
-			virtual CMBlock getData() const;
+			virtual void Serialize(ByteStream &ostream, uint8_t version) const;
 
-			virtual void Serialize(ByteStream &ostream) const;
+			virtual bool Deserialize(ByteStream &istream, uint8_t version);
 
-			virtual bool Deserialize(ByteStream &istream);
+			virtual nlohmann::json toJson(uint8_t version) const;
 
-			virtual nlohmann::json toJson() const;
-
-			virtual void fromJson(const nlohmann::json &jsonData);
+			virtual void fromJson(const nlohmann::json &jsonData, uint8_t version);
 
 		private:
 			CMBlock _merkeProof;
 			CMBlock _mainChainTransaction;
+			UInt256 _mainChainTxHash;
 		};
 	}
 }

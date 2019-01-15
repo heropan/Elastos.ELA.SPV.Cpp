@@ -30,15 +30,13 @@ namespace Elastos {
 
 			const UInt168 &getController() const;
 
-			virtual CMBlock getData() const;
+			virtual void Serialize(ByteStream &ostream, uint8_t version) const;
 
-			virtual void Serialize(ByteStream &ostream) const;
+			virtual bool Deserialize(ByteStream &istream, uint8_t version);
 
-			virtual bool Deserialize(ByteStream &istream);
+			virtual nlohmann::json toJson(uint8_t version) const;
 
-			virtual nlohmann::json toJson() const;
-
-			virtual void fromJson(const nlohmann::json &jsonData);
+			virtual void fromJson(const nlohmann::json &jsonData, uint8_t version);
 
 			virtual bool isValid() const;
 

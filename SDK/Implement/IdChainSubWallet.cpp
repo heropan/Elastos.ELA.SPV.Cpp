@@ -60,7 +60,7 @@ namespace Elastos {
 			ParamChecker::checkCondition(transaction == nullptr, Error::CreateTransaction, "Create ID tx");
 
 			PayloadRegisterIdentification *payloadIdChain = static_cast<PayloadRegisterIdentification *>(transaction->getPayload());
-			payloadIdChain->fromJson(payloadJson);
+			payloadIdChain->fromJson(payloadJson, 0);
 
 			Program *newProgram = new Program();
 			newProgram->fromJson(programJson);
@@ -122,7 +122,7 @@ namespace Elastos {
 										  Utils::UInt256ToString(transaction->getHash(), true),
 										  SubWalletCallback::convertToString(
 												  SubWalletCallback::Added),
-										  payload->toJson(), 0);
+										  payload->toJson(0), 0);
 							  });
 			} else {
 				SubWallet::onTxAdded(transaction);
@@ -146,7 +146,7 @@ namespace Elastos {
 								  const PayloadRegisterIdentification *payload = static_cast<const PayloadRegisterIdentification *>(
 										  transaction->getPayload());
 								  callback->OnTransactionStatusChanged(reversedId, SubWalletCallback::convertToString(
-										  SubWalletCallback::Updated), payload->toJson(), confirm);
+										  SubWalletCallback::Updated), payload->toJson(0), confirm);
 							  });
 			} else {
 				SubWallet::onTxUpdated(hash, blockHeight, timeStamp);
@@ -166,7 +166,7 @@ namespace Elastos {
 								  const PayloadRegisterIdentification *payload = static_cast<const PayloadRegisterIdentification *>(
 										  transaction->getPayload());
 								  callback->OnTransactionStatusChanged(reversedId, SubWalletCallback::convertToString(
-										  SubWalletCallback::Deleted), payload->toJson(), 0);
+										  SubWalletCallback::Deleted), payload->toJson(0), 0);
 							  });
 			} else {
 				SubWallet::onTxDeleted(hash, notifyUser, recommendRescan);

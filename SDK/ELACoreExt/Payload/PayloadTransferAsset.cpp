@@ -15,25 +15,20 @@ namespace Elastos {
 
 		}
 
-		CMBlock PayloadTransferAsset::getData() const {
-			//todo implement IPayload getData
-			return CMBlock();
-		}
-
-		void PayloadTransferAsset::Serialize(ByteStream &ostream) const {
+		void PayloadTransferAsset::Serialize(ByteStream &ostream, uint8_t version) const {
 
 		}
 
-		bool PayloadTransferAsset::Deserialize(ByteStream &istream) {
+		bool PayloadTransferAsset::Deserialize(ByteStream &istream, uint8_t version) {
 			return true;
 		}
 
-		nlohmann::json PayloadTransferAsset::toJson() const {
+		nlohmann::json PayloadTransferAsset::toJson(uint8_t version) const {
 			nlohmann::json jsonData;
 			return jsonData;
 		}
 
-		void PayloadTransferAsset::fromJson(const nlohmann::json &jsonData) {
+		void PayloadTransferAsset::fromJson(const nlohmann::json &jsonData, uint8_t version) {
 
 		}
 	}

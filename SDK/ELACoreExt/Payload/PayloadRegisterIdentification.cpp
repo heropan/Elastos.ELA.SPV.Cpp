@@ -42,7 +42,7 @@ namespace Elastos {
 			return true;
 		}
 
-		void PayloadRegisterIdentification::Serialize(ByteStream &ostream) const {
+		void PayloadRegisterIdentification::Serialize(ByteStream &ostream, uint8_t version) const {
 
 			assert(!_id.empty());
 			assert(!_contents.empty());
@@ -63,7 +63,7 @@ namespace Elastos {
 			}
 		}
 
-		bool PayloadRegisterIdentification::Deserialize(ByteStream &istream) {
+		bool PayloadRegisterIdentification::Deserialize(ByteStream &istream, uint8_t version) {
 			if (!istream.readVarString(_id)) {
 				Log::error("Payload register identification deserialize id fail");
 				return false;
@@ -116,7 +116,7 @@ namespace Elastos {
 			return true;
 		}
 
-		nlohmann::json PayloadRegisterIdentification::toJson() const {
+		nlohmann::json PayloadRegisterIdentification::toJson(uint8_t version) const {
 			nlohmann::json j;
 			j["Id"] = _id;
 			j["Sign"] = Utils::encodeHex(_sign);
@@ -141,7 +141,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadRegisterIdentification::fromJson(const nlohmann::json &j) {
+		void PayloadRegisterIdentification::fromJson(const nlohmann::json &j, uint8_t version) {
 			_id = j["Id"].get<std::string>();
 			if (j.find("Sign") != j.end())
 				_sign = Utils::decodeHex(j["Sign"].get<std::string>());

@@ -52,20 +52,14 @@ namespace Elastos {
 			return _amount % (uint64_t)pow(10, 8 - _asset.getPrecision()) != 0;
 		}
 
-		CMBlock PayloadRegisterAsset::getData() const {
-			ByteStream stream;
-			Serialize(stream);
-			return stream.getBuffer();
-		}
-
-		void PayloadRegisterAsset::Serialize(ByteStream &ostream) const {
+		void PayloadRegisterAsset::Serialize(ByteStream &ostream, uint8_t version) const {
 			_asset.Serialize(ostream);
 
 			ostream.writeBytes(&_amount, sizeof(_amount));
 			ostream.writeBytes(_controller.u8, sizeof(_controller));
 		}
 
-		bool PayloadRegisterAsset::Deserialize(ByteStream &istream) {
+		bool PayloadRegisterAsset::Deserialize(ByteStream &istream, uint8_t version) {
 			if (!_asset.Deserialize(istream)) {
 				Log::error("Payload register asset deserialize asset fail");
 				return false;
@@ -84,7 +78,7 @@ namespace Elastos {
 			return true;
 		}
 
-		nlohmann::json PayloadRegisterAsset::toJson() const {
+		nlohmann::json PayloadRegisterAsset::toJson(uint8_t version) const {
 			nlohmann::json j;
 
 			j["Asset"] = _asset.toJson();
@@ -94,7 +88,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadRegisterAsset::fromJson(const nlohmann::json &j) {
+		void PayloadRegisterAsset::fromJson(const nlohmann::json &j, uint8_t version) {
 			_asset.fromJson(j["Asset"]);
 			_amount = j["Amount"].get<uint64_t>();
 			_controller = Utils::UInt168FromString(j["Controller"].get<std::string>());

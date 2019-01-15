@@ -32,13 +32,13 @@ namespace Elastos {
 
 			void SetLocation(uint64_t location);
 
-			virtual void Serialize(ByteStream &ostream) const;
+			virtual void Serialize(ByteStream &ostream, uint8_t version) const;
 
-			virtual bool Deserialize(ByteStream &istream);
+			virtual bool Deserialize(ByteStream &istream, uint8_t version);
 
-			virtual nlohmann::json toJson() const;
+			virtual nlohmann::json toJson(uint8_t version) const;
 
-			virtual void fromJson(const nlohmann::json &);
+			virtual void fromJson(const nlohmann::json &, uint8_t version);
 
 		private:
 			std::string _publicKey;

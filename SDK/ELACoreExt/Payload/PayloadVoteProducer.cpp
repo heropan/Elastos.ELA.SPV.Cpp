@@ -39,7 +39,7 @@ namespace Elastos {
 			_publicKeys = keys;
 		}
 
-		void PayloadVoteProducer::Serialize(ByteStream &ostream) const {
+		void PayloadVoteProducer::Serialize(ByteStream &ostream, uint8_t version) const {
 			ostream.writeVarString(_voter);
 			ostream.writeUint64(_stake);
 
@@ -49,7 +49,7 @@ namespace Elastos {
 			});
 		}
 
-		bool PayloadVoteProducer::Deserialize(ByteStream &istream) {
+		bool PayloadVoteProducer::Deserialize(ByteStream &istream, uint8_t version) {
 			if (!istream.readVarString(_voter))
 				return false;
 			if (!istream.readUint64(_stake))
@@ -68,7 +68,7 @@ namespace Elastos {
 			return true;
 		}
 
-		nlohmann::json PayloadVoteProducer::toJson() const {
+		nlohmann::json PayloadVoteProducer::toJson(uint8_t version) const {
 			nlohmann::json j;
 			j["Voter"] = _voter;
 			j["Stake"] = _stake;
@@ -77,7 +77,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadVoteProducer::fromJson(const nlohmann::json &j) {
+		void PayloadVoteProducer::fromJson(const nlohmann::json &j, uint8_t version) {
 			_voter = j["Voter"].get<std::string>();
 			_stake = j["Stake"].get<uint64_t>();
 			std::vector<nlohmann::json> keys = j["PublicKeys"];

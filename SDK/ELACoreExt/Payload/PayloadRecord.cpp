@@ -40,19 +40,12 @@ namespace Elastos {
 			return _recordData;
 		}
 
-		CMBlock PayloadRecord::getData() const {
-			ByteStream stream;
-			Serialize(stream);
-
-			return stream.getBuffer();
-		}
-
-		void PayloadRecord::Serialize(ByteStream &ostream) const {
+		void PayloadRecord::Serialize(ByteStream &ostream, uint8_t version) const {
 			ostream.writeVarString(_recordType);
 			ostream.writeVarBytes(_recordData);
 		}
 
-		bool PayloadRecord::Deserialize(ByteStream &istream) {
+		bool PayloadRecord::Deserialize(ByteStream &istream, uint8_t version) {
 			if (!istream.readVarString(_recordType)) {
 				Log::getLogger()->error("Payload record deserialize type fail");
 				return false;
@@ -66,7 +59,7 @@ namespace Elastos {
 			return true;
 		}
 
-		nlohmann::json PayloadRecord::toJson() const {
+		nlohmann::json PayloadRecord::toJson(uint8_t version) const {
 			nlohmann::json j;
 
 			j["RecordType"] = _recordType;
@@ -75,7 +68,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadRecord::fromJson(const nlohmann::json &j) {
+		void PayloadRecord::fromJson(const nlohmann::json &j, uint8_t version) {
 			_recordType = j["RecordType"].get<std::string>();
 			_recordData = Utils::decodeHex(j["RecordData"].get<std::string>());
 		}

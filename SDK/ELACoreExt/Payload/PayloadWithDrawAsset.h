@@ -22,21 +22,24 @@ namespace Elastos {
 			~PayloadWithDrawAsset();
 
 			void setBlockHeight(uint32_t blockHeight);
+
 			uint32_t getBlockHeight() const;
+
 			void setGenesisBlockAddress(const std::string &genesisBlockAddress);
+
 			const std::string &getGenesisBlockAddress() const;
+
 			void setSideChainTransacitonHash(const std::vector<UInt256> &sideChainTransactionHash);
+
 			const std::vector<UInt256> &getSideChainTransacitonHash() const;
 
-			virtual CMBlock getData() const;
+			virtual void Serialize(ByteStream &ostream, uint8_t version) const;
 
-			virtual void Serialize(ByteStream &ostream) const;
+			virtual bool Deserialize(ByteStream &istream, uint8_t version);
 
-			virtual bool Deserialize(ByteStream &istream);
+			virtual nlohmann::json toJson(uint8_t version) const;
 
-			virtual nlohmann::json toJson() const;
-
-			virtual void fromJson(const nlohmann::json &jsonData);
+			virtual void fromJson(const nlohmann::json &jsonData, uint8_t version);
 
 		private:
 			uint32_t _blockHeight;

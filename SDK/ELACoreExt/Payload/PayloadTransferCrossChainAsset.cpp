@@ -32,13 +32,6 @@ namespace Elastos {
 			_crossChainAmount = crossChainAmount;
 		}
 
-		CMBlock PayloadTransferCrossChainAsset::getData() const {
-			//todo implement IPayload getData
-			ByteStream stream;
-			Serialize(stream);
-			return stream.getBuffer();
-		}
-
 		bool PayloadTransferCrossChainAsset::isValid() const {
 			size_t len = _crossChainAddress.size();
 			if (len <= 0 || len != _outputIndex.size() || len != _crossChainAmount.size()) {
@@ -71,7 +64,7 @@ namespace Elastos {
 			return _crossChainAmount;
 		}
 
-		void PayloadTransferCrossChainAsset::Serialize(ByteStream &ostream) const {
+		void PayloadTransferCrossChainAsset::Serialize(ByteStream &ostream, uint8_t version) const {
 			if (_crossChainAddress.size() != _outputIndex.size() || _outputIndex.size() != _crossChainAmount.size()) {
 				Log::getLogger()->error("Invalid cross chain asset: len(crossChainAddress)={},"
 							" len(outputIndex)={}, len(crossChainAddress)={}", _crossChainAddress.size(),
@@ -88,7 +81,7 @@ namespace Elastos {
 			}
 		}
 
-		bool PayloadTransferCrossChainAsset::Deserialize(ByteStream &istream) {
+		bool PayloadTransferCrossChainAsset::Deserialize(ByteStream &istream, uint8_t version) {
 			uint64_t len = 0;
 			if (!istream.readVarUint(len)) {
 				Log::error("Payload transfer cross chain asset deserialize fail");
@@ -119,7 +112,7 @@ namespace Elastos {
 			return true;
 		}
 
-		nlohmann::json PayloadTransferCrossChainAsset::toJson() const {
+		nlohmann::json PayloadTransferCrossChainAsset::toJson(uint8_t version) const {
 			nlohmann::json j;
 
 			j["CrossChainAddress"] = _crossChainAddress;
@@ -129,7 +122,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadTransferCrossChainAsset::fromJson(const nlohmann::json &j) {
+		void PayloadTransferCrossChainAsset::fromJson(const nlohmann::json &j, uint8_t version) {
 			_crossChainAddress = j["CrossChainAddress"].get<std::vector<std::string>>();
 			_outputIndex = j["OutputIndex"].get<std::vector<uint64_t>>();
 			_crossChainAmount = j["CrossChainAmount"].get<std::vector<uint64_t >>();

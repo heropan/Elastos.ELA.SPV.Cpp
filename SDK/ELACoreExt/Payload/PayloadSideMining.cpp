@@ -44,20 +44,14 @@ namespace Elastos {
 			_signedData = signedData;
 		}
 
-		CMBlock PayloadSideMining::getData() const {
-			ByteStream stream;
-			this->Serialize(stream);
-			return stream.getBuffer();
-		}
-
-		void PayloadSideMining::Serialize(ByteStream &ostream) const {
+		void PayloadSideMining::Serialize(ByteStream &ostream, uint8_t version) const {
 			ostream.writeBytes(_sideBlockHash.u8, sizeof(UInt256));
 			ostream.writeBytes(_sideGenesisHash.u8, sizeof(UInt256));
 			ostream.writeUint32(_blockHeight);
 			ostream.writeVarBytes(_signedData);
 		}
 
-		bool PayloadSideMining::Deserialize(ByteStream &istream) {
+		bool PayloadSideMining::Deserialize(ByteStream &istream, uint8_t version) {
 			if (!istream.readBytes(_sideBlockHash.u8, sizeof(UInt256)))
 				return false;
 
@@ -71,7 +65,7 @@ namespace Elastos {
 
 		}
 
-		nlohmann::json PayloadSideMining::toJson() const {
+		nlohmann::json PayloadSideMining::toJson(uint8_t version) const {
 			nlohmann::json j;
 
 			j["SideBlockHash"] = Utils::UInt256ToString(_sideBlockHash, true);
@@ -82,7 +76,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadSideMining::fromJson(const nlohmann::json &j) {
+		void PayloadSideMining::fromJson(const nlohmann::json &j, uint8_t version) {
 			_sideBlockHash = Utils::UInt256FromString(j["SideBlockHash"].get<std::string>(), true);
 			_sideGenesisHash = Utils::UInt256FromString(j["SideGenesisHash"].get<std::string>(), true);
 			_blockHeight = j["BlockHeight"].get<uint32_t>();

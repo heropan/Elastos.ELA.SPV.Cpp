@@ -47,21 +47,21 @@ namespace Elastos {
 			_location = location;
 		}
 
-		void PayloadRegisterProducer::Serialize(ByteStream &ostream) const {
+		void PayloadRegisterProducer::Serialize(ByteStream &ostream, uint8_t version) const {
 			ostream.writeVarString(_publicKey);
 			ostream.writeVarString(_nickName);
 			ostream.writeVarString(_url);
 			ostream.writeUint64(_location);
 		}
 
-		bool PayloadRegisterProducer::Deserialize(ByteStream &istream) {
+		bool PayloadRegisterProducer::Deserialize(ByteStream &istream, uint8_t version) {
 			return !(!istream.readVarString(_publicKey) ||
 					 !istream.readVarString(_nickName) ||
 					 !istream.readVarString(_url) ||
 					 !istream.readUint64(_location));
 		}
 
-		nlohmann::json PayloadRegisterProducer::toJson() const {
+		nlohmann::json PayloadRegisterProducer::toJson(uint8_t version) const {
 			nlohmann::json j;
 			j["PublicKey"] = _publicKey;
 			j["NickName"] = _nickName;
@@ -70,7 +70,7 @@ namespace Elastos {
 			return j;
 		}
 
-		void PayloadRegisterProducer::fromJson(const nlohmann::json &j) {
+		void PayloadRegisterProducer::fromJson(const nlohmann::json &j, uint8_t version) {
 			_publicKey = j["PublicKey"].get<std::string>();
 			_nickName = j["NickName"].get<std::string>();
 			_url = j["Url"].get<std::string>();

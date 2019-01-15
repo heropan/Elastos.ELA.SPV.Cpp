@@ -454,6 +454,7 @@ namespace Elastos {
 					   _initFrom == ImportFromOldKeyStore) {
 				timeStamp = rawParams->checkpoints[0].timestamp;
 				fixedInfo.setEaliestPeerTime(timeStamp);
+				fixedInfo.setEaliestPeerTime(1537911625);
 			} else if (_initFrom == ImportFromKeyStore || _initFrom == ImportFromLocalStore) {
 				fixedInfo.setEaliestPeerTime(info.getEarliestPeerTime());
 			} else {
@@ -491,10 +492,10 @@ namespace Elastos {
 		MasterWallet::GenerateProgram(const std::string &id, const std::string &message, const std::string &password) {
 			PayloadRegisterIdentification payload;
 			nlohmann::json payLoadJson = nlohmann::json::parse(message);
-			payload.fromJson(payLoadJson);
+			payload.fromJson(payLoadJson, 0);
 
 			ByteStream ostream;
-			payload.Serialize(ostream);
+			payload.Serialize(ostream, 0);
 			CMBlock payloadData = ostream.getBuffer();
 
 			nlohmann::json j;

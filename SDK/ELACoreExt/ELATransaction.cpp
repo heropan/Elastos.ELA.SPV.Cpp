@@ -89,9 +89,9 @@ namespace Elastos {
 				tx->payload = ELAPayloadNew(orig->type);
 
 				ByteStream stream;
-				orig->payload->Serialize(stream);
+				orig->payload->Serialize(stream, orig->payloadVersion);
 				stream.setPosition(0);
-				tx->payload->Deserialize(stream);
+				tx->payload->Deserialize(stream, orig->payloadVersion);
 			}
 
 			for (size_t i = 0; i < orig->raw.inCount; ++i) {
