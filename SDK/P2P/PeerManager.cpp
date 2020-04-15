@@ -915,7 +915,7 @@ namespace Elastos {
 				_reconnectStep = 1;
 				_estimatedHeight = peer->GetLastBlock();
 				_connectFailureCount = 0; // reset connect failure count
-				if (_netType != "PrvNet" && _needGetAddr) {
+				if (0 && _netType != "PrvNet" && _needGetAddr) {
 					peer->SendMessage(MSG_GETADDR, Message::DefaultParam);
 					peer->ScheduleDisconnect(PROTOCOL_TIMEOUT); // schedule sync timeout
 				} else {
@@ -1312,6 +1312,7 @@ namespace Elastos {
 			std::vector<MerkleBlockPtr> saveBlocks;
 			std::vector<uint256> txHashes;
 			block->MerkleBlockTxHashes(txHashes);
+			static uint32_t totaltx = 0;
 
 			{
 				boost::mutex::scoped_lock scopedLock(lock);
@@ -1392,10 +1393,15 @@ namespace Elastos {
 					_lastBlock = block;
 					_wallet->SetBlockHeight(_lastBlock->GetHeight());
 
+					totaltx += block->GetTotalTx();
+					if (block->GetHeight() % 50 == 0) {
+						peer->info("block #{}", block->GetHeight());
+					}
 					if ((block->GetHeight() % 500) == 0 || txHashes.size() > 0 ||
 						block->GetHeight() >= peer->GetLastBlock()) {
-						peer->info("adding block #{}, false positive rate: {}", block->GetHeight(), _fpRate);
+						peer->info("adding block #{}, tx {}, false positive rate: {}", block->GetHeight(), totaltx, _fpRate);
 						FireSyncProgress(GetSyncProgressInternal(0), peer, block);
+						totaltx = 0;
 					}
 
 					if (txHashes.size() > 0)
